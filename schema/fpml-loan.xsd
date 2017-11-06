@@ -46,22 +46,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AbstractServicingNotificationAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An abstract base type for all syndicated loan servicing notifications; the wrapper for notification acknowledgements.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Acknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractServicingNotificationException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An abstract base type for all syndicated loan servicing notifications; the wrapper for notification exceptions.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Exception"/>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">ASSET-SPECIFIC ABSTRACT NOTIFICATIONS</xsd:documentation>
 	</xsd:annotation>
@@ -77,22 +61,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AbstractContractNotificationAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationAcknowledgement for loan contract level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractServicingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractContractNotificationException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationException for loan contract level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractServicingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="AbstractFacilityNotification" abstract="true">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotification which includes a reference to the facility to which embedded loan events apply. This abtract type should be used to 'wrap' facility-level business events.</xsd:documentation>
@@ -103,22 +71,6 @@
 					<xsd:element name="facilityPosition" type="FacilityPosition" minOccurs="0"/>
 				</xsd:sequence>
 			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractFacilityNotificationAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationAcknowledgement for facility evel.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractServicingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractFacilityNotificationException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationException for facility level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractServicingNotificationException"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="AbstractLoanStatement" abstract="true">
@@ -142,25 +94,53 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanStatementAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationAcknowledgement for statements.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Acknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanStatementException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An extension of the AbstractServicingNotificationException for statements.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Exception"/>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">******************************************************************</xsd:documentation>
 	</xsd:annotation>
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">***** ACKNOWLEDGEMENT AND EXCEPTION NOTIFICATIONS *****</xsd:documentation>
+	</xsd:annotation>
+	<xsd:complexType name="LoanNotificationAcknowledgement">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A message used to acknowledge a loan notification.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="Acknowledgement">
+				<xsd:sequence>
+					<xsd:group ref="LoanIdentifiers.model"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="LoanNotificationException">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A message used to indicate an exception issue with a loan notification.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="Exception">
+				<xsd:sequence>
+					<xsd:group ref="LoanIdentifiers.model"/>
+					<xsd:element name="party" type="Party"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="LoanNotificationRetracted">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A message used to indicate a retraction of a loan notification.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="NonCorrectableRequestMessage">
+				<xsd:sequence>
+					<xsd:sequence>
+						<xsd:group ref="LoanIdentifiers.model"/>
+						<xsd:element name="party" type="Party"/>
+					</xsd:sequence>
+					<xsd:element name="originalMessage" type="UnprocessedElementWrapper" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">***** CONTRACT-LEVEL NOTIFICATIONS *****</xsd:documentation>
 	</xsd:annotation>
@@ -198,69 +178,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AccrualOptionChangeNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of an accrual option change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccrualOptionChangeNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with an accrual option change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccrualOptionChangeNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous accrual option change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:choice>
-							<xsd:sequence>
-								<xsd:choice>
-									<xsd:element name="fixedRateOptionChange" type="FixedRateOptionChange"/>
-									<xsd:element name="floatingRateOptionChange" type="FloatingRateOptionChange"/>
-								</xsd:choice>
-								<xsd:element name="contract" type="LoanContract" minOccurs="0" maxOccurs="unbounded"/>
-							</xsd:sequence>
-							<xsd:element name="accruingPikOptionChange" type="AccruingPikOptionChange"/>
-							<xsd:sequence>
-								<xsd:element name="lcOptionChange" type="LcOptionChange"/>
-								<xsd:element name="letterOfCredit" type="LetterOfCredit" minOccurs="0" maxOccurs="unbounded"/>
-							</xsd:sequence>
-						</xsd:choice>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:group ref="LoanContractDetails.model" minOccurs="0" maxOccurs="unbounded"/>
-						<xsd:group ref="LetterOfCreditDetails.model" minOccurs="0" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<!--L/C NOTIFICATION-->
 	<xsd:complexType name="LcNotification">
 		<xsd:annotation>
@@ -280,57 +197,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LcNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of an LC notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LcNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with an LC notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LcNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous letter of credit notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="lcEventGroup"/>
-						<xsd:sequence>
-							<xsd:group ref="FacilityDetails.model"/>
-							<xsd:group ref="LetterOfCreditDetails.model"/>
-						</xsd:sequence>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -356,57 +222,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanContractNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a loan contract notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanContractNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a loan contract notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanContractNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification retraction used to communicate cancellation of various loan contract business events.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="loanContractEventGroup"/>
-						<xsd:sequence>
-							<xsd:group ref="FacilityDetails.model"/>
-							<xsd:group ref="LoanContractDetails.model"/>
-						</xsd:sequence>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<!--NON-RECURRING FEE PAYMENT NOTIFICATION-->
 	<xsd:complexType name="NonRecurringFeePaymentNotification">
 		<xsd:annotation>
@@ -424,55 +239,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="NonRecurringFeePaymentNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a non-recurring fee payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="NonRecurringFeePaymentNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a non-recurring fee payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="NonRecurringFeePaymentNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous non-recurring fee payment.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="facilityFeePaymentGroup"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:group ref="LoanContractDetails.model" minOccurs="0" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -496,51 +262,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="PrepaymentNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a prepayment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="PrepaymentNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a prepayment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="PrepaymentNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction designed to cancel a previous pre-payment.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier"/>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="prepayment" type="Prepayment"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:group ref="LoanContractDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<!--ROLLOVER NOTIFICATION-->
 	<xsd:complexType name="RolloverNotification">
 		<xsd:annotation>
@@ -557,50 +278,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="RolloverNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a rollover notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="RolloverNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a rollover notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="RolloverNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction designed to cancel a previous rollover transaction.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier"/>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="rollover" type="Rollover"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -631,54 +308,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AccruingFeeChangeNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of an accruing fee change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingFeeChangeNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with an accruing fee change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingFeeChangeNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous accruing fee change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="accruingFeeChangeGroup"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">ACCRUING FEE PAYMENT NOTIFICATION: SINGLE EVENT</xsd:documentation>
 	</xsd:annotation>
@@ -697,54 +326,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingFeePaymentNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a fee payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingFeePaymentNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a fee payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingFeePaymentNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous accruing fee payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="accruingFeePayment" type="AccruingFeePayment"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -769,54 +350,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AccruingPikPaymentNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of an accruing PIK payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingPikPaymentNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with an accruing PIK payment notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AccruingPikPaymentNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous PIK rate payment.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="accruingPikPayment" type="AccruingPikPayment"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">FACILITY NOTIFICATION</xsd:documentation>
 	</xsd:annotation>
@@ -835,54 +368,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a facility-level business event notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exceptions issues with a facility-level business event notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous facility-level business event.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="facilityEventGroup"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -905,55 +390,6 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityRateChangeNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a facility rate change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityRateChangeNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a facility rate change notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractFacilityNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityRateChangeNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing retraction used to cancel a previous change in facility-level rates.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="NonCorrectableRequestMessage">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of referenced business events being cancelled/retracted.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element ref="facilityRateChangeGroup"/>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:group ref="LoanContractDetails.model" minOccurs="0" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1001,73 +437,12 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanPartyProfileNotificationAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An abstract base type for party profile notifications; the wrapper for notification acknowledgements.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Acknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanPartyProfileNotificationException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An abstract base type for party profile notifications; the wrapper for notification exceptions.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Exception"/>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">***** PARTY PROFILE NOTIFICATIONS *****</xsd:documentation>
 	</xsd:annotation>
 	<xsd:complexType name="LoanPartyEventInstructionOverrideNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A set of instructions communicated by lenders containing their relevant contact and payment details. This is communicated by lenders (usually to agents), specific to a set of (any) loan events. This message can be used to override standard wiring instructions that the lender may already have registered with their counterpart.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotification">
-				<xsd:sequence>
-					<xsd:element name="eventIdentifier" type="BusinessEventIdentifier">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">The event for which the (currency-specific) settlement instructions should be applied.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:choice>
-						<xsd:element name="incomingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>Settlement account details to describe the acount to which cash should be sent, for payments received by the party sending the Lender Event Settlement Notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="outgoingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>Settlement account details to describe the account from which cash originated. These details are used by the receiver for reconciliation of potential payments made by the party sending the Lender Event Settlement Notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:choice>
-					<xsd:element name="party" type="Party" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyEventInstructionOverrideNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A notification used to communicate acknowledgement of a party event instruction override notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyEventInstructionOverrideNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A notification used to communicate exception issues with a party event instruction override notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyEventInstructionOverrideNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A notification used to communicate the retraction of a party event instruction override notification.</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="AbstractLoanPartyProfileNotification">
@@ -1107,110 +482,7 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanPartyProfileNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A notification used to communicate acknowledgement of a party profile notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyProfileNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A profile generated and communicated by market participants containing their relevant contact and payment details. This is communicated by lenders to anyone who wishes to initiate payments and/or communicate with them.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyProfileNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A profile generated and communicated by market participants containing their relevant contact and payment details. This is communicated by lenders to anyone who wishes to initiate payments and/or communicate with them.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="partyProfileIdentifier" type="PartyProfileIdentifier"/>
-						<xsd:element name="party" type="Party"/>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="associationIdentifier" type="AssociationToAssetIdentifier" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded"/>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="partyProfile" type="PartyProfile"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded"/>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanPartyTradingInstructionOverrideNotification">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A set of instructions communicated by parties to override standard wiring instructions for a specific trade or allocation only.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotification">
-				<xsd:sequence>
-					<xsd:choice>
-						<xsd:element name="allocationIdentifier" type="LoanAllocationIdentifier">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">The allocation for which the settlement instructions should be applied.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="loanTradeReference" type="LoanTradeReference">
-							<xsd:annotation>
-								<xsd:documentation>Reference to the original loan trade.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:choice>
-					<xsd:choice>
-						<xsd:element name="incomingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>Settlement account details to describe the acount to which cash should be sent, for payments received by the party sending the Lender Event Settlement Notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="outgoingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>Settlement account details to describe the account from which cash originated. These details are used by the receiver for reconciliation of potential payments made by the party sending the Lender Event Settlement Notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="tradeSummary" type="LoanTradeSummary">
-							<xsd:annotation>
-								<xsd:documentation>A summary structure representing a loan trade.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyTradingInstructionOverrideNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A set of instructions communicated by parties to override standard wiring instructions for a specific trade or allocation only.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyTradingInstructionOverrideNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A set of instructions communicated by parties to override standard wiring instructions for a specific trade or allocation only.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanPartyProfileNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanPartyTradingInstructionOverrideNotificationRetracted">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A set of instructions communicated by parties to override standard wiring instructions for a specific trade or allocation only.</xsd:documentation>
 		</xsd:annotation>
@@ -1313,12 +585,12 @@
 			<xsd:extension base="AbstractPartyProfile">
 				<xsd:sequence>
 					<xsd:choice maxOccurs="unbounded">
-						<xsd:element name="contactOnAsset" type="ContactOnAsset">
+						<xsd:element name="communicationInstructions" type="ApplicableCommunicationInstructions">
 							<xsd:annotation>
 								<xsd:documentation xml:lang="en">Relates an asset, or asswts, to an element within a party block (customarily a business unit or person).</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="settlementDetailsOnAsset" type="SettlementDetailsOnAsset"/>
+						<xsd:element name="settlementInstructions" type="ApplicableSettlementInstructions"/>
 					</xsd:choice>
 				</xsd:sequence>
 			</xsd:extension>
@@ -1327,7 +599,7 @@
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">***** PARTY NOTIFICATION ABSTRACT TYPES *****</xsd:documentation>
 	</xsd:annotation>
-	<xsd:complexType name="AbstractApplicableObjects" abstract="true">
+	<xsd:complexType name="AbstractApplicablePartyProfileObjects" abstract="true">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">An abstract base type that combines objects applicable to the description of a party profile (e.g. applicable assets and cash evets to specific contacts or settlement instructions).</xsd:documentation>
 		</xsd:annotation>
@@ -1382,14 +654,14 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	<xsd:complexType name="ContactOnAsset">
+	<xsd:complexType name="ApplicableCommunicationInstructions">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">Definition of the assets (or type of assets) that a particular payment profile may be associated with.</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
-			<xsd:extension base="AbstractApplicableObjects">
+			<xsd:extension base="AbstractApplicablePartyProfileObjects">
 				<xsd:sequence>
-					<xsd:element name="role" type="RoleOnAsset">
+					<xsd:element name="role" type="ApplicableRole">
 						<xsd:annotation>
 							<xsd:documentation>A scheme to describe the role of a person or business unit in relation to an asset or assets.</xsd:documentation>
 						</xsd:annotation>
@@ -1406,6 +678,37 @@
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:choice>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ApplicableRole">
+		<xsd:annotation>
+			<xsd:documentation>A scheme that describes the role of a contact in relation to an asset or assets.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:normalizedString">
+				<xsd:attribute name="applicableRoleScheme" type="xsd:anyURI" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="ApplicableSettlementInstructions">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Definition of the assets (or type of assets) that a particular payment profile may be associated with.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="AbstractApplicablePartyProfileObjects">
+				<xsd:sequence>
+					<xsd:element name="incomingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Settlement account details to describe the acount to which cash should be sent, for payments received by the party sending the Lender Party Notification.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="outgoingSettlementDetails" type="SettlementDetails" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Settlement account details to describe the account from which cash originated. These details are used by the receiver for reconciliation of potential payments made by the party sending the Lender Profile Notification.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -1480,27 +783,6 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:complexType name="SettlementDetailsOnAsset">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">Definition of the assets (or type of assets) that a particular payment profile may be associated with.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractApplicableObjects">
-				<xsd:sequence>
-					<xsd:element name="incomingSettlementDetails" type="SettlementDetails" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation>Settlement account details to describe the acount to which cash should be sent, for payments received by the party sending the Lender Party Notification.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element name="outgoingSettlementDetails" type="SettlementDetails" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation>Settlement account details to describe the account from which cash originated. These details are used by the receiver for reconciliation of potential payments made by the party sending the Lender Profile Notification.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="SettlementInstructionId">
 		<xsd:annotation>
 			<xsd:documentation>A type defining a cash settlement details identifier and qualifying scheme</xsd:documentation>
@@ -1535,16 +817,6 @@
 		<xsd:simpleContent>
 			<xsd:extension base="xsd:normalizedString">
 				<xsd:attribute name="taxFormTypeScheme" type="xsd:anyURI" use="required"/>
-			</xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
-	<xsd:complexType name="RoleOnAsset">
-		<xsd:annotation>
-			<xsd:documentation>A scheme that describes the role of a contact in relation to an asset or assets.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:normalizedString">
-				<xsd:attribute name="roleOnAssetTypeScheme" type="xsd:anyURI" use="required"/>
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
@@ -1588,66 +860,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanBulkServicingNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate acknowledgement of a bulk servicing notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanBulkServicingNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate exception issues with a bulk servicing notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanBulkServicingNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate the retraction of a bulk servicing notification.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractContractNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" minOccurs="2" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:choice minOccurs="2" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>This section is used to specify the cash generating events that are part of this 'bulk' notification. Bulk messages are to be used when communicating 2 or more events.</xsd:documentation>
-							</xsd:annotation>
-							<xsd:element ref="facilityFeePaymentGroup"/>
-							<xsd:element ref="facilityEventGroup"/>
-							<xsd:element name="accruingFeePayment" type="AccruingFeePayment"/>
-							<xsd:element name="accruingPikPayment" type="AccruingPikPayment"/>
-							<xsd:element ref="loanContractEventGroup"/>
-							<xsd:element ref="lcEventGroup"/>
-						</xsd:choice>
-						<xsd:choice maxOccurs="unbounded">
-							<xsd:group ref="FacilityDetails.model"/>
-							<xsd:choice minOccurs="0">
-								<xsd:group ref="LetterOfCreditDetails.model"/>
-								<xsd:group ref="LoanContractDetails.model"/>
-							</xsd:choice>
-						</xsd:choice>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:annotation>
 		<xsd:documentation xml:lang="en">************************************</xsd:documentation>
 	</xsd:annotation>
@@ -1655,43 +867,6 @@
 		<xsd:documentation xml:lang="en">***** LOAN STATEMENTS *****</xsd:documentation>
 	</xsd:annotation>
 	<xsd:complexType name="DealStatement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A full set of deal and facility definitions valid as of a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatement">
-				<xsd:sequence>
-					<xsd:element name="deal" type="Deal">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A complete deal structure.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element name="party" type="Party" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="DealStatementAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A full set of deal and facility definitions valid as of a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="DealStatementException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A full set of deal and facility definitions valid as of a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="DealStatementRetracted">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A full set of deal and facility definitions valid as of a specific date.</xsd:documentation>
 		</xsd:annotation>
@@ -1729,86 +904,7 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="FacilityStatementAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A single facility definition stated as of a certain date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityStatementException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A single facility definition stated as of a certain date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityStatementRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A single facility definition stated as of a certain date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatement">
-				<xsd:sequence>
-					<xsd:element ref="facilityGroup"/>
-					<xsd:element name="party" type="Party" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="FacilityOutstandingsPositionStatement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">Position details (including outstandings) for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatement">
-				<xsd:sequence>
-					<xsd:element name="facilityOutstandingsPosition" type="FacilityOutstandingsPosition">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">Commitment and outstanding position details for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element name="positionPartyReference" type="PartyReference" minOccurs="0">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A reference to the party for whom positions are being reported.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:sequence>
-						<xsd:group ref="FacilityDetails.model"/>
-						<xsd:group ref="LoanContractDetails.model" minOccurs="0" maxOccurs="unbounded"/>
-					</xsd:sequence>
-					<xsd:element name="party" type="Party" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityOutstandingsPositionStatementAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">Position details (including outstandings) for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityOutstandingsPositionStatementException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">Position details (including outstandings) for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityOutstandingsPositionStatementRetracted">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">Position details (including outstandings) for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
 		</xsd:annotation>
@@ -1865,102 +961,7 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="FacilityPositionStatementAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A statement containing the commitment amounts for a single facility at the global and (optionally) the lender postion levels, on a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityPositionStatementException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A statement containing the commitment amounts for a single facility at the global and (optionally) the lender postion levels, on a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="FacilityPositionStatementRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A statement containing the commitment amounts for a single facility at the global and (optionally) the lender postion levels, on a specific date.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatement">
-				<xsd:sequence>
-					<xsd:element name="facilityPosition" type="FacilityPosition">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">Commitment position details for a single facility. Positions can be stated at the global and (optionally) at the lender-specific level.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element name="positionPartyReference" type="PartyReference" minOccurs="0">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A reference to the party for whom positions are being reported (if applicable position amounts are populated).</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:group ref="FacilityDetails.model"/>
-					<xsd:element name="party" type="Party" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="OutstandingContractsStatement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A collection of outstanding loan contract and/or letter of credit structures belonging to a single facility.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatement">
-				<xsd:sequence>
-					<xsd:element name="facilityIdentifier" type="FacilityIdentifier">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">The facility to which the loan contracts and/or letter of credits belong.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:choice maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A choice allowing the sender to describe the collection of loan contracts and/or letter of credits, belonging to a single facility.</xsd:documentation>
-						</xsd:annotation>
-						<xsd:element name="loanContract" type="LoanContract">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of loan contracts.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="letterOfCredit" type="LetterOfCredit">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A collection of letter of credits.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:choice>
-					<xsd:element name="party" type="Party" minOccurs="0" maxOccurs="unbounded">
-						<xsd:annotation>
-							<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="OutstandingContractsStatementAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A collection of outstanding loan contract and/or letter of credit structures belonging to a single facility.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="OutstandingContractsStatementException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A collection of outstanding loan contract and/or letter of credit structures belonging to a single facility.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanStatementException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="OutstandingContractsStatementRetracted">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A collection of outstanding loan contract and/or letter of credit structures belonging to a single facility.</xsd:documentation>
 		</xsd:annotation>
@@ -2871,22 +1872,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanTradingNotificationAcknowledgement" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An underlying structure for all syndicated loan servicing notifications; the wrapper for loan events which occur through the life-cycle of a deal.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Acknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="AbstractLoanTradingNotificationException" abstract="true">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">An underlying structure for all syndicated loan servicing notifications; the wrapper for loan events which occur through the life-cycle of a deal.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="Exception"/>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="AbstractLoanTradePaymentNotification" abstract="true">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">An underlying structure for all syndicated loan servicing notifications; the wrapper for loan events which occur through the life-cycle of a deal.</xsd:documentation>
@@ -2941,43 +1926,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationConfirmationNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of trade allocation details, from counterparty to counterparty, or admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationConfirmationNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of trade allocation details, from counterparty to counterparty, or admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationConfirmationNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of trade allocation details, from counterparty to counterparty, or admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:sequence>
-					<xsd:element name="allocation" type="LoanAllocationEvent" maxOccurs="unbounded"/>
-					<xsd:sequence>
-						<xsd:element name="tradeSummary" type="LoanTradeSummary" maxOccurs="unbounded"/>
-						<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanAllocationNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade allocation details, from counterparty to counterparty, or counterparty to admin agent.</xsd:documentation>
@@ -3007,65 +1955,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade allocation details, from counterparty to counterparty, or counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade allocation details, from counterparty to counterparty, or counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade allocation details, from counterparty to counterparty, or counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="allocationIdentifier" type="LoanAllocationIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">Unique allocation id used to identify the allocation record that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="allocation" type="LoanAllocationEvent" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>A structure defining information related to a loan trade allocation.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:sequence>
-							<xsd:element name="tradeSummary" type="LoanTradeSummary" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation>A summary structure representing a loan trade.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanAllocationSettlementDateAvailabilityNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement date coordination details, between admin agent and counterparties.</xsd:documentation>
@@ -3084,57 +1973,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateAvailabilityNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement date coordination details, between admin agent and counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateAvailabilityNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement date coordination details, between admin agent and counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateAvailabilityNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement date coordination details, between admin agent and counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="settlementDateAvailability" type="LoanSettlementDateAvailabilityEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3159,57 +1997,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateFinalizationNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate finalized trade settlement date details, from admin agent to counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateFinalizationNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate finalized trade settlement date details, from admin agent to counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementDateFinalizationNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate finalized trade settlement date details, from admin agent to counterparties.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="settlementDateFinalization" type="LoanSettlementDateFinalizationEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanAllocationSettlementNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement details (including funding economics), from counterparty to counterparty.</xsd:documentation>
@@ -3228,60 +2015,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement details (including funding economics), from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement details (including funding economics), from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement details (including funding economics), from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanAllocationPaymentNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="settlement" type="LoanAllocationSettlementEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:sequence>
-								<xsd:element name="deal" type="Deal" minOccurs="0"/>
-								<xsd:group ref="FacilityLoanContractDetails.model"/>
-							</xsd:sequence>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3306,57 +2039,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementTaskNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate allocation-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementTaskNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate allocation-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationSettlementTaskNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate allocation-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="taskIdentifier" type="LoanTradingSettlementTaskIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">The unique id of the settlement task that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="task" type="LoanAllocationSettlementTask" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanAllocationTransferFeeDueNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
@@ -3378,57 +2060,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeDueNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeDueNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeDueNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanAllocationPaymentNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="feeDue" type="LoanAllocationTransferFeeDueEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanAllocationTransferFeeOwedNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
@@ -3447,57 +2078,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeOwedNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeOwedNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanAllocationTransferFeeOwedNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="feeOwed" type="LoanAllocationTransferFeeOwedEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3535,42 +2115,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanTradeConfirmationNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of master trade details, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeConfirmationNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of master trade details, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeConfirmationNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate confirmation of master trade details, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:sequence>
-					<xsd:element name="trade" type="LoanTradeEvent" maxOccurs="unbounded"/>
-					<xsd:sequence>
-						<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanTradeNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to counterparty.</xsd:documentation>
@@ -3592,60 +2136,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="tradeIdentifier" type="TradeIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">Unique trade ids used to identify the trade record that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="trade" type="LoanTradeEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation>A model used to reference a facility by either identifier or summary.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:group>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3674,61 +2164,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanTradeSettlementTaskNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate master trade-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeSettlementTaskNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate master trade-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeSettlementTaskNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate master trade-level tasks and their statuses, the completion of which are deemed by the sender of the notification to be prerequesites to the settlement of a trade or allocation.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="taskIdentifier" type="LoanTradingSettlementTaskIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">The unique id of the settlement task that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="task" type="LoanTradeSettlementTask" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:element name="tradeSummary" type="LoanTradeSummary" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation>A summary of the master trade.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanTradeTransferFeeDueNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
@@ -3747,57 +2182,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeDueNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeDueNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeDueNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradePaymentNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="feeDue" type="LoanTradeTransferFeeDueEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:element name="tradeSummary" type="LoanTradeSummary" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3822,57 +2206,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeOwedNotificationAcknolwedgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeOwedNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTradeTransferFeeOwedNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate transfer fee details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="feeOwed" type="LoanTradeTransferFeeOwedEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:element name="tradeSummary" type="LoanTradeSummary" maxOccurs="unbounded"/>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	<xsd:complexType name="LoanTransferNotification">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to admin agent.</xsd:documentation>
@@ -3890,56 +2223,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate details to establish a master trade, from counterparty to admin agent.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="tradeIdentifier" type="TradeIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">Unique trade ids used to identify the trade record that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="transfer" type="LoanTransferEvent" maxOccurs="unbounded"/>
-						<xsd:sequence>
-							<xsd:group ref="FacilityDetails.model" maxOccurs="unbounded"/>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -3969,68 +2252,6 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferSettlementNotificationAcknowledgement">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement position and outstandings details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationAcknowledgement"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferSettlementNotificationException">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement position and outstandings details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotificationException"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="LoanTransferSettlementNotificationRetracted">
-		<xsd:annotation>
-			<xsd:documentation xml:lang="en">A loan servicing notification used to communicate trade settlement position and outstandings details, from admin agent to counterparty.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="AbstractLoanTradingNotification">
-				<xsd:choice>
-					<xsd:sequence>
-						<xsd:element name="eventIdentifier" type="BusinessEventIdentifier" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>An event identifier for the event that is retracted by the notification.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="party" type="Party" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:sequence>
-						<xsd:element name="settlement" type="LoanTransferSettlementEvent" maxOccurs="unbounded">
-							<xsd:annotation>
-								<xsd:documentation>The transfer settlement event.</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:sequence>
-							<xsd:group ref="LoanTradeAllocationDetails.model" maxOccurs="unbounded"/>
-							<xsd:sequence>
-								<xsd:element name="deal" type="Deal" minOccurs="0"/>
-								<xsd:group ref="FacilityLoanContractDetails.model" maxOccurs="unbounded">
-									<xsd:annotation>
-										<xsd:documentation>A model used to reference a facility together with all current contract-level information.</xsd:documentation>
-									</xsd:annotation>
-								</xsd:group>
-							</xsd:sequence>
-							<xsd:element name="party" type="Party" maxOccurs="unbounded">
-								<xsd:annotation>
-									<xsd:documentation xml:lang="en">A legal entity or a subdivision of a legal entity.</xsd:documentation>
-								</xsd:annotation>
-							</xsd:element>
-						</xsd:sequence>
-					</xsd:sequence>
-				</xsd:choice>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -5177,7 +3398,7 @@
 					<xsd:documentation xml:lang="en">A pointer style reference to a party identifier and optionally an account identifier defined elsewhere in the document. The party referenced has allocated the trade identifier.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:group>
-			<xsd:element name="eventId" type="LoanTradingSettlementTaskId"/>
+			<xsd:element name="taskId" type="LoanTradingSettlementTaskId"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID"/>
 	</xsd:complexType>
@@ -5313,6 +3534,24 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="LoanIdentifiers.model">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A model which contains the identifiers used by loan structures.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="eventIdentifier" type="EventIdentifier"/>
+			<xsd:element name="tradeIdentifier" type="TradeIdentifier"/>
+			<xsd:sequence>
+				<xsd:element name="allocationIdentifier" type="LoanAllocationIdentifier"/>
+				<xsd:element name="tradeIdentifier" type="TradeIdentifier">
+					<xsd:annotation>
+						<xsd:documentation xml:lang="en">Unique trade ids used to identify the trade record.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:element name="taskIdentifier" type="LoanTradingSettlementTaskIdentifier"/>
+		</xsd:choice>
 	</xsd:group>
 	<xsd:group name="LoanTradeAllocationDetails.model">
 		<xsd:annotation>
@@ -7185,147 +5424,42 @@
 	<!--============================================-->
 	<!--**** BULK NOTIFICATION ELEMENTS ****-->
 	<xsd:element name="loanBulkServicingNotification" type="LoanBulkServicingNotification"/>
-	<xsd:element name="loanBulkServicingNotificationAcknowledgement" type="LoanBulkServicingNotificationAcknowledgement"/>
-	<xsd:element name="loanBulkServicingNotificationException" type="LoanBulkServicingNotificationException"/>
-	<xsd:element name="loanBulkServicingNotificationRetracted" type="LoanBulkServicingNotificationRetracted"/>
 	<!--**** PARTY PROFILE NOTIFICATION ELEMENTS ****-->
 	<xsd:element name="loanPartyEventInstructionOverrideNotification" type="LoanPartyEventInstructionOverrideNotification"/>
-	<xsd:element name="loanPartyEventInstructionOverrideNotificationAcknowledgement" type="LoanPartyEventInstructionOverrideNotificationAcknowledgement"/>
-	<xsd:element name="loanPartyEventInstructionOverrideNotificationException" type="LoanPartyEventInstructionOverrideNotificationException"/>
-	<xsd:element name="loanPartyEventInstructionOverrideNotificationRetracted" type="LoanPartyEventInstructionOverrideNotificationRetracted"/>
 	<xsd:element name="loanPartyProfileNotification" type="LoanPartyProfileNotification"/>
-	<xsd:element name="loanPartyProfileNotificationAcknowledgement" type="LoanPartyProfileNotificationAcknowledgement"/>
-	<xsd:element name="loanPartyProfileNotificationException" type="LoanPartyProfileNotificationException"/>
-	<xsd:element name="loanPartyProfileNotificationRetracted" type="LoanPartyProfileNotificationRetracted"/>
 	<xsd:element name="loanPartyTradingInstructionOverrideNotification" type="LoanPartyTradingInstructionOverrideNotification"/>
-	<xsd:element name="loanPartyTradingInstructionOverrideNotificationAcknowledgement" type="LoanPartyTradingInstructionOverrideNotificationAcknowledgement"/>
-	<xsd:element name="loanPartyTradingInstructionOverrideNotificationException" type="LoanPartyTradingInstructionOverrideNotificationAcknowledgement"/>
-	<xsd:element name="loanPartyTradingInstructionOverrideNotificationRetracted" type="LoanPartyTradingInstructionOverrideNotificationRetracted"/>
 	<!--**** LOAN SERVICING NOTIFICATION ELEMENTS ****-->
 	<xsd:element name="accrualOptionChangeNotification" type="AccrualOptionChangeNotification"/>
-	<xsd:element name="accrualOptionChangeNotificationAcknowledgement" type="AccrualOptionChangeNotificationAcknowledgement"/>
-	<xsd:element name="accrualOptionChangeNotificationException" type="AccrualOptionChangeNotificationException"/>
-	<xsd:element name="accrualOptionChangeNotificationRetracted" type="AccrualOptionChangeNotificationRetracted"/>
 	<xsd:element name="accruingFeeChangeNotification" type="AccruingFeeChangeNotification"/>
-	<xsd:element name="accruingFeeChangeNotificationAcknowledgement" type="AccruingFeeChangeNotificationAcknowledgement"/>
-	<xsd:element name="accruingFeeChangeNotificationException" type="AccruingFeeChangeNotificationException"/>
-	<xsd:element name="accruingFeeChangeNotificationRetracted" type="AccruingFeeChangeNotificationRetracted"/>
 	<xsd:element name="accruingFeePaymentNotification" type="AccruingFeePaymentNotification"/>
-	<xsd:element name="accruingFeePaymentNotificationAcknowledgement" type="AccruingFeePaymentNotificationAcknowledgement"/>
-	<xsd:element name="accruingFeePaymentNotificationException" type="AccruingFeePaymentNotificationException"/>
-	<xsd:element name="accruingFeePaymentNotificationRetracted" type="AccruingFeePaymentNotificationRetracted"/>
 	<xsd:element name="accruingPikPaymentNotification" type="AccruingPikPaymentNotification"/>
-	<xsd:element name="accruingPikPaymentNotificationAcknowledgement" type="AccruingPikPaymentNotificationAcknowledgement"/>
-	<xsd:element name="accruingPikPaymentNotificationException" type="AccruingPikPaymentNotificationException"/>
-	<xsd:element name="accruingPikPaymentNotificationRetracted" type="AccruingPikPaymentNotificationRetracted"/>
 	<xsd:element name="facilityNotification" type="FacilityNotification"/>
-	<xsd:element name="facilityNotificationAcknowledgement" type="FacilityNotificationAcknowledgement"/>
-	<xsd:element name="facilityNotificationException" type="FacilityNotificationException"/>
-	<xsd:element name="facilityNotificationRetracted" type="FacilityNotificationRetracted"/>
 	<xsd:element name="facilityRateChangeNotification" type="FacilityRateChangeNotification"/>
-	<xsd:element name="facilityRateChangeNotificationAcknowledgement" type="FacilityRateChangeNotificationAcknowledgement"/>
-	<xsd:element name="facilityRateChangeNotificationException" type="FacilityRateChangeNotificationException"/>
-	<xsd:element name="facilityRateChangeNotificationRetracted" type="FacilityRateChangeNotificationRetracted"/>
 	<xsd:element name="lcNotification" type="LcNotification"/>
-	<xsd:element name="lcNotificationAcknowledgement" type="LcNotificationAcknowledgement"/>
-	<xsd:element name="lcNotificationException" type="LcNotificationException"/>
-	<xsd:element name="lcNotificationRetracted" type="LcNotificationRetracted"/>
 	<xsd:element name="loanContractNotification" type="LoanContractNotification"/>
-	<xsd:element name="loanContractNotificationAcknowledgement" type="LoanContractNotificationAcknowledgement"/>
-	<xsd:element name="loanContractNotificationException" type="LoanContractNotificationException"/>
-	<xsd:element name="loanContractNotificationRetracted" type="LoanContractNotificationRetracted"/>
 	<xsd:element name="nonRecurringFeePaymentNotification" type="NonRecurringFeePaymentNotification"/>
-	<xsd:element name="nonRecurringFeePaymentNotificationAcknowledgement" type="NonRecurringFeePaymentNotificationAcknowledgement"/>
-	<xsd:element name="nonRecurringFeePaymentNotificationException" type="NonRecurringFeePaymentNotificationException"/>
-	<xsd:element name="nonRecurringFeePaymentNotificationRetracted" type="NonRecurringFeePaymentNotificationRetracted"/>
 	<xsd:element name="prepaymentNotification" type="PrepaymentNotification"/>
-	<xsd:element name="prepaymentNotificationAcknowledgement" type="PrepaymentNotificationAcknowledgement"/>
-	<xsd:element name="prepaymentNotificationException" type="PrepaymentNotificationException"/>
-	<xsd:element name="prepaymentNotificationRetracted" type="PrepaymentNotificationRetracted"/>
 	<xsd:element name="rolloverNotification" type="RolloverNotification"/>
-	<xsd:element name="rolloverNotificationAcknowledgement" type="RolloverNotificationAcknowledgement"/>
-	<xsd:element name="rolloverNotificationException" type="RolloverNotificationException"/>
-	<xsd:element name="rolloverNotificationRetracted" type="RolloverNotificationRetracted"/>
 	<!--**** LOAN TRADE NOTIFICATION ELEMENTS ****-->
 	<xsd:element name="loanAllocationConfirmationNotification" type="LoanAllocationConfirmationNotification"/>
-	<xsd:element name="loanAllocationConfirmationNotificationAcknowledgement" type="LoanAllocationConfirmationNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationConfirmationNotificationException" type="LoanAllocationConfirmationNotificationException"/>
-	<xsd:element name="loanAllocationConfirmationNotificationRetracted" type="LoanAllocationConfirmationNotificationRetracted"/>
 	<xsd:element name="loanAllocationNotification" type="LoanAllocationNotification"/>
-	<xsd:element name="loanAllocationNotificationAcknowledgement" type="LoanAllocationNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationNotificationException" type="LoanAllocationNotificationException"/>
-	<xsd:element name="loanAllocationNotificationRetracted" type="LoanAllocationNotificationRetracted"/>
 	<xsd:element name="loanAllocationSettlementNotification" type="LoanAllocationSettlementNotification"/>
-	<xsd:element name="loanAllocationSettlementNotificationAcknowledgement" type="LoanAllocationSettlementNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationSettlementNotificationException" type="LoanAllocationSettlementNotificationException"/>
-	<xsd:element name="loanAllocationSettlementNotificationRetracted" type="LoanAllocationSettlementNotificationRetracted"/>
 	<xsd:element name="loanAllocationSettlementTaskNotification" type="LoanAllocationSettlementTaskNotification"/>
-	<xsd:element name="loanAllocationSettlementTaskNotificationAcknowledgement" type="LoanAllocationSettlementTaskNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationSettlementTaskNotificationException" type="LoanAllocationSettlementTaskNotificationException"/>
-	<xsd:element name="loanAllocationSettlementTaskNotificationRetracted" type="LoanAllocationSettlementTaskNotificationRetracted"/>
 	<xsd:element name="loanAllocationSettlementDateAvailabilityNotification" type="LoanAllocationSettlementDateAvailabilityNotification"/>
-	<xsd:element name="loanAllocationSettlementDateAvailabilityNotificationAcknowledgement" type="LoanAllocationSettlementDateAvailabilityNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationSettlementDateAvailabilityNotificationException" type="LoanAllocationSettlementDateAvailabilityNotificationException"/>
-	<xsd:element name="loanAllocationSettlementDateAvailabilityNotificationRetracted" type="LoanAllocationSettlementDateAvailabilityNotificationRetracted"/>
 	<xsd:element name="loanAllocationSettlementDateFinalizationNotification" type="LoanAllocationSettlementDateFinalizationNotification"/>
-	<xsd:element name="loanAllocationSettlementDateFinalizationNotificationAcknowledgement" type="LoanAllocationSettlementDateFinalizationNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationSettlementDateFinalizationNotificationException" type="LoanAllocationSettlementDateFinalizationNotificationException"/>
-	<xsd:element name="loanAllocationSettlementDateFinalizationNotificationRetracted" type="LoanAllocationSettlementDateFinalizationNotificationRetracted"/>
 	<xsd:element name="loanAllocationTransferFeeDueNotification" type="LoanAllocationTransferFeeDueNotification"/>
-	<xsd:element name="loanAllocationTransferFeeDueNotificationAcknowledgement" type="LoanAllocationTransferFeeDueNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationTransferFeeDueNotificationException" type="LoanAllocationTransferFeeDueNotificationException"/>
-	<xsd:element name="loanAllocationTransferFeeDueNotificationRetracted" type="LoanAllocationTransferFeeDueNotificationRetracted"/>
 	<xsd:element name="loanAllocationTransferFeeOwedNotification" type="LoanAllocationTransferFeeOwedNotification"/>
-	<xsd:element name="loanAllocationTransferFeeOwedNotificationAcknowledgement" type="LoanAllocationTransferFeeOwedNotificationAcknowledgement"/>
-	<xsd:element name="loanAllocationTransferFeeOwedNotificationException" type="LoanAllocationTransferFeeOwedNotificationException"/>
-	<xsd:element name="loanAllocationTransferFeeOwedNotificationRetracted" type="LoanAllocationTransferFeeOwedNotificationRetracted"/>
 	<xsd:element name="loanTradeConfirmationNotification" type="LoanTradeConfirmationNotification"/>
-	<xsd:element name="loanTradeConfirmationNotificationAcknowledgement" type="LoanTradeConfirmationNotificationAcknowledgement"/>
-	<xsd:element name="loanTradeConfirmationNotificationException" type="LoanTradeConfirmationNotificationException"/>
-	<xsd:element name="loanTradeConfirmationNotificationRetracted" type="LoanTradeConfirmationNotificationRetracted"/>
 	<xsd:element name="loanTradeNotification" type="LoanTradeNotification"/>
-	<xsd:element name="loanTradeNotificationAcknowledgement" type="LoanTradeNotificationAcknowledgement"/>
-	<xsd:element name="loanTradeNotificationException" type="LoanTradeNotificationException"/>
-	<xsd:element name="loanTradeNotificationRetracted" type="LoanTradeNotificationRetracted"/>
 	<xsd:element name="loanTradeSettlementTaskNotification" type="LoanTradeSettlementTaskNotification"/>
-	<xsd:element name="loanTradeSettlementTaskNotificationAcknowledgement" type="LoanTradeSettlementTaskNotificationAcknowledgement"/>
-	<xsd:element name="loanTradeSettlementTaskNotificationException" type="LoanTradeSettlementTaskNotificationException"/>
-	<xsd:element name="loanTradeSettlementTaskNotificationRetracted" type="LoanTradeSettlementTaskNotificationRetracted"/>
 	<xsd:element name="loanTradeTransferFeeOwedNotification" type="LoanTradeTransferFeeOwedNotification"/>
-	<xsd:element name="loanTradeTransferFeeOwedNotificationAcknowledgement" type="LoanTradeTransferFeeOwedNotificationAcknolwedgement"/>
-	<xsd:element name="loanTradeTransferFeeOwedNotificationException" type="LoanTradeTransferFeeOwedNotificationException"/>
-	<xsd:element name="loanTradeTransferFeeOwedNotificationRetracted" type="LoanTradeTransferFeeOwedNotificationRetracted"/>
 	<xsd:element name="loanTradeTransferFeeDueNotification" type="LoanTradeTransferFeeDueNotification"/>
-	<xsd:element name="loanTradeTransferFeeDueNotificationAcknowledgement" type="LoanTradeTransferFeeDueNotificationAcknowledgement"/>
-	<xsd:element name="loanTradeTransferFeeDueNotificationException" type="LoanTradeTransferFeeDueNotificationException"/>
-	<xsd:element name="loanTradeTransferFeeDueNotificationRetracted" type="LoanTradeTransferFeeDueNotificationRetracted"/>
 	<xsd:element name="loanTransferNotification" type="LoanTransferNotification"/>
-	<xsd:element name="loanTransferNotificationAcknowledgement" type="LoanTransferNotificationAcknowledgement"/>
-	<xsd:element name="loanTransferNotificationException" type="LoanTransferNotificationException"/>
-	<xsd:element name="loanTransferNotificationRetracted" type="LoanTransferNotificationRetracted"/>
 	<xsd:element name="loanTransferSettlementNotification" type="LoanTransferSettlementNotification"/>
-	<xsd:element name="loanTransferSettlementNotificationAcknowledgement" type="LoanTransferSettlementNotificationAcknowledgement"/>
-	<xsd:element name="loanTransferSettlementNotificationException" type="LoanTransferSettlementNotificationException"/>
-	<xsd:element name="loanTransferSettlementNotificationRetracted" type="LoanTransferSettlementNotificationRetracted"/>
 	<!--**** STATEMENT ELEMENTS ****-->
 	<xsd:element name="dealStatement" type="DealStatement"/>
-	<xsd:element name="dealStatementAcknowledgement" type="DealStatementAcknowledgement"/>
-	<xsd:element name="dealStatementException" type="DealStatementException"/>
-	<xsd:element name="dealStatementRetracted" type="DealStatementRetracted"/>
 	<xsd:element name="facilityStatement" type="FacilityStatement"/>
-	<xsd:element name="facilityStatementAcknowledgement" type="FacilityStatementAcknowledgement"/>
-	<xsd:element name="facilityStatementException" type="FacilityStatementException"/>
-	<xsd:element name="facilityStatementRetracted" type="FacilityStatementRetracted"/>
 	<xsd:element name="outstandingContractsStatement" type="OutstandingContractsStatement"/>
-	<xsd:element name="outstandingContractsStatementAcknowledgement" type="OutstandingContractsStatementAcknowledgement"/>
-	<xsd:element name="outstandingContractsStatementException" type="OutstandingContractsStatementException"/>
-	<xsd:element name="outstandingContractsStatementRetracted" type="OutstandingContractsStatementRetracted"/>
 	<xsd:element name="facilityPositionStatement" type="FacilityPositionStatement"/>
-	<xsd:element name="facilityPositionStatementAcknowledgement" type="FacilityPositionStatementAcknowledgement"/>
-	<xsd:element name="facilityPositionStatementException" type="FacilityPositionStatementAcknowledgement"/>
-	<xsd:element name="facilityPositionStatementRetracted" type="FacilityPositionStatementRetracted"/>
 	<xsd:element name="facilityOutstandingsPositionStatement" type="FacilityOutstandingsPositionStatement"/>
-	<xsd:element name="facilityOutstandingsPositionStatementAcknowledgement" type="FacilityOutstandingsPositionStatementAcknowledgement"/>
-	<xsd:element name="facilityOutstandingsPositionStatementException" type="FacilityOutstandingsPositionStatementException"/>
-	<xsd:element name="facilityOutstandingsPositionStatementRetracted" type="FacilityOutstandingsPositionStatementRetracted"/>
 </xsd:schema>
